@@ -1,12 +1,9 @@
 import React from 'react';
 import './App.css';
+import PathfindingVis from './PathfindingVis'
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      
-    </div>
+    <PathfindingVis/>
   );
 }
-
-export default App;
