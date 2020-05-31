@@ -25,9 +25,9 @@ const getNeighbors = (index: number): number[] => {
 	const { x, y } = listToTwoD(index);
 	if (x === -1 || y === -1) return [-1, -1, -1, -1];
 	return [twoDtoList(x - 1, y),
-		(twoDtoList(x + 1, y) % 35 !== 0) ? twoDtoList(x + 1, y) : -1,
-		twoDtoList(x, y + 1),
-		twoDtoList(x, y - 1),
+	(twoDtoList(x + 1, y) % 35 !== 0) ? twoDtoList(x + 1, y) : -1,
+	twoDtoList(x, y + 1),
+	twoDtoList(x, y - 1),
 	];
 };
 
@@ -35,6 +35,7 @@ const getH = (start: number, end: number): number => {
 	const { x: x1, y: y1 } = listToTwoD(start);
 	const { x: x2, y: y2 } = listToTwoD(end);
 	return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+	// return Math.abs(x2 - x1) + Math.abs(y2 - y1);
 };
 
 class MapWithDefault<K, V> extends Map<K, V> {
@@ -179,11 +180,13 @@ export default class PathfindingVis extends Component {
 			closedSet.push(current);
 
 			getNeighbors(current).forEach(neighbor => {
-				if (closedSet.includes(neighbor) || board[neighbor] === 'wall' || neighbor === -1) return;
+				if (board[neighbor] === 'wall' || neighbor === -1) return;
 
-				const tentative_gScore = gScore.get(current);
+				const tentative_gScore = gScore.get(current) + 1;
 
-				if (tentative_gScore < gScore.get(neighbor)) {
+				if (closedSet.includes(neighbor) && tentative_gScore >= gScore.get(neighbor)) return;
+
+				if (!openSet.includes(neighbor) || tentative_gScore <= gScore.get(neighbor)) {
 					cameFrom.set(neighbor, current);
 					gScore.set(neighbor, tentative_gScore);
 					fScore.set(neighbor, gScore.get(neighbor) + getH(neighbor, end) * type);
