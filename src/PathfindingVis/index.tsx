@@ -81,12 +81,21 @@ export default class PathfindingVis extends Component {
 		});
 	}
 
+	updateBatch = (indexes: number[], value: gridSquareState): void => {
+		this.setState({
+			board: this.state.board.map((square, i) => (
+				indexes.includes(i) ? value : square
+			)),
+		});
+	}
+
 	handleClick = (index: number): void => {
 		this.setState({
 			board: this.state.board.map((square, i) => {
 				let newSquare = square;
 				if (this.state.squareTypeSelection === 'start' && square === 'start' && index !== i) newSquare = 'empty';
 				if (this.state.squareTypeSelection === 'end' && square === 'end' && index !== i) newSquare = 'empty';
+				if (square === 'visited' || square === 'path') newSquare = 'empty';
 				if (index === i) newSquare = this.state.squareTypeSelection;
 				return newSquare;
 			}),
@@ -101,10 +110,27 @@ export default class PathfindingVis extends Component {
 
 	// end react functions and begin pathfinding functions
 
+	reconstructPath = (cameFrom: Map<number, number>, current: number): void => {
+		const totalPath = [current];
+		while (cameFrom.has(current)) {
+			const potentialCurrent = cameFrom.get(current);
+			if (potentialCurrent !== undefined) current = potentialCurrent;
+			totalPath.push(current);
+		}
+		totalPath.splice(totalPath.indexOf(this.state.board.indexOf('start')), 1);
+		totalPath.splice(totalPath.indexOf(this.state.board.indexOf('end')), 1);
+		this.updateBatch(totalPath, 'path');
+	}
 
-	startAStar = (): void => {
+
+	startPathfind = (type: 0|1): void => {
 		if (this.state.isPathfinding) return;
 		this.setState({ isPathfinding: true });
+		this.setState({
+			board: this.state.board.map((square) => (
+				square === 'visited' || square === 'path' ? 'empty' : square
+			)),
+		});
 		const board = this.state.board;
 		const start = board.indexOf('start');
 		const end = board.indexOf('end');
@@ -122,17 +148,12 @@ export default class PathfindingVis extends Component {
 		const gScore = new MapWithDefault<number, number>(Infinity);
 		gScore.set(start, 0);
 		const fScore = new MapWithDefault<number, number>(Infinity);
-		fScore.set(start, getH(start, end));
+		fScore.set(start, getH(start, end) * type);
 
 		const intervalKey = window.setInterval(() => {
 			if (openSet.length === 0) {
 				window.clearInterval(intervalKey);
 				window.alert('no possible path');
-				this.setState({
-					board: this.state.board.map((square) => (
-						square === 'visited' ? 'empty' : square
-					)),
-				});
 				return;
 			}
 
@@ -143,13 +164,8 @@ export default class PathfindingVis extends Component {
 
 			if (current === end) {
 				this.setState({ isPathfinding: false });
-				window.alert('done');
 				window.clearInterval(intervalKey);
-				this.setState({
-					board: this.state.board.map((square) => (
-						square === 'visited' ? 'empty' : square
-					)),
-				});
+				this.reconstructPath(cameFrom, current);
 				return;
 			}
 
@@ -166,7 +182,7 @@ export default class PathfindingVis extends Component {
 				if (tentative_gScore < gScore.get(neighbor)) {
 					cameFrom.set(neighbor, current);
 					gScore.set(neighbor, tentative_gScore);
-					fScore.set(neighbor, gScore.get(neighbor) + getH(neighbor, end));
+					fScore.set(neighbor, gScore.get(neighbor) + getH(neighbor, end) * type);
 					if (!openSet.includes(neighbor)) {
 						openSet.push(neighbor);
 					}
@@ -189,7 +205,8 @@ export default class PathfindingVis extends Component {
 					<input type='radio' id='end' name='square-type' value='end' checked={this.state.squareTypeSelection === 'end'} onChange={(e) => this.handleOptionChange(e.target)} />
 					<label htmlFor='wall'>End</label>
 				</form>
-				<button onClick={this.startAStar}>Run A*</button>
+				<button onClick={() => this.startPathfind((1))}>Run A*</button>
+				<button onClick={() => this.startPathfind((0))}>Run Dijkstras</button>
 				<div className='grid' ref={this.grid}>
 					{this.state.board.map((square, index) => (
 						<Square type={square} handleMouseOver={this.handleMouseOver} handleClick={this.handleClick} index={index} key={index} />
