@@ -1,0 +1,1 @@
+export type gridSquareState = 'start'|'end'|'wall'|'empty'|'visited'|'path'|'closed';
