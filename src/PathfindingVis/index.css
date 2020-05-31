@@ -10,28 +10,43 @@
 .square {
 	display: block;
 	background-color: whitesmoke;
-	border: 1px solid black;
 	width: 100%;
 	height: 0;
-    padding-bottom: 100%;
+	padding-bottom: 100%;
+}
+
+.default {
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	background-color: whitesmoke;
+	clip-path: circle(0%);
+	transition: background-color 300ms ease-in-out,
+				clip-path 500ms ease-in-out;
 }
 
 .visited {
-	background-color: blue;
+	background-color: #4361ee;
+	clip-path: circle(75%);
+	/* lerp between 4361ee and 4cc9f0*/
 }
 
 .start {
-	background-color: green;
+	background-color: #3a0ca3;
+	clip-path: circle(75%);
 }
 
 .end {
-	background-color: red;
+	background-color: #f72585;
+	clip-path: circle(75%);
 }
 
 .wall {
-	background-color: black;
+	background-color: #333533;
+	clip-path: circle(75%);
 }
 
 .path {
-	background-color: yellow;
+	background-color: #7209b7;
+	clip-path: circle(75%);
 }

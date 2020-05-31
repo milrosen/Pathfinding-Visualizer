@@ -42,13 +42,13 @@ class MapWithDefault<K, V> extends Map<K, V> {
 	default: V;
 
 	get(key: K) {
-	  const potentialReturn = super.get(key);
-	  return potentialReturn !== undefined ? potentialReturn : this.default;
+		const potentialReturn = super.get(key);
+		return potentialReturn !== undefined ? potentialReturn : this.default;
 	}
 
 	constructor(defaultValue: V, entries: Map<K, V> = new Map()) {
-	  super(entries);
-	  this.default = defaultValue;
+		super(entries);
+		this.default = defaultValue;
 	}
 }
 
@@ -68,7 +68,7 @@ export default class PathfindingVis extends Component {
 	}
 
 	handleMouseOver = (index: number): void => {
-		if (!this.state.mousedown || this.state.squareTypeSelection.match(/start|end/)) return;
+		if (!this.state.mousedown || this.state.squareTypeSelection.match(/start|end/) || this.state.isPathfinding) return;
 
 		this.updateBoard(index, this.state.squareTypeSelection);
 	};
@@ -90,6 +90,7 @@ export default class PathfindingVis extends Component {
 	}
 
 	handleClick = (index: number): void => {
+		if (this.state.isPathfinding) return;
 		this.setState({
 			board: this.state.board.map((square, i) => {
 				let newSquare = square;
@@ -123,7 +124,7 @@ export default class PathfindingVis extends Component {
 	}
 
 
-	startPathfind = (type: 0|1): void => {
+	startPathfind = (type: 0 | 1): void => {
 		if (this.state.isPathfinding) return;
 		this.setState({ isPathfinding: true });
 		this.setState({
@@ -153,7 +154,10 @@ export default class PathfindingVis extends Component {
 		const intervalKey = window.setInterval(() => {
 			if (openSet.length === 0) {
 				window.clearInterval(intervalKey);
-				window.alert('no possible path');
+				setTimeout(() => {
+					window.alert('no possible path');
+				}, 500);
+				this.setState({ isPathfinding: false });
 				return;
 			}
 
