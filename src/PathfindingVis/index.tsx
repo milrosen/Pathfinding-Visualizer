@@ -135,6 +135,7 @@ export default class PathfindingVis extends Component {
 	}
 
 	clearWalls = (): void => {
+		if (this.state.isWorking) return;
 		this.setState({
 			board: this.state.board.map(() => (
 				'empty'
