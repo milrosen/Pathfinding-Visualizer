@@ -21,7 +21,7 @@
 	padding-bottom: 100%;
 	background-color: whitesmoke;
 	clip-path: circle(0%);
-	transition: background-color 300ms ease-in-out,
+	transition: background-color 500ms ease-in-out,
 				clip-path 500ms ease-in-out;
 }
 

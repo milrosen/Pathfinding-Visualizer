@@ -25,9 +25,19 @@ const getNeighbors = (index: number): number[] => {
 	const { x, y } = listToTwoD(index);
 	if (x === -1 || y === -1) return [-1, -1, -1, -1];
 	return [twoDtoList(x - 1, y),
-	(twoDtoList(x + 1, y) % 35 !== 0) ? twoDtoList(x + 1, y) : -1,
-	twoDtoList(x, y + 1),
-	twoDtoList(x, y - 1),
+		(twoDtoList(x + 1, y) % cols !== 0) ? twoDtoList(x + 1, y) : -1,
+		twoDtoList(x, y + 1),
+		twoDtoList(x, y - 1),
+	];
+};
+
+const getMazeNeighbors = (index: number): number[] => {
+	const { x, y } = listToTwoD(index);
+	if (x === -1 || y === -1) return [-1, -1, -1, -1];
+	return [twoDtoList(x - 2, y),
+		(twoDtoList(x + 2, y) % cols !== 0) ? twoDtoList(x + 2, y) : -1,
+		twoDtoList(x, y + 2),
+		twoDtoList(x, y - 2),
 	];
 };
 
@@ -56,10 +66,10 @@ class MapWithDefault<K, V> extends Map<K, V> {
 export default class PathfindingVis extends Component {
 
 	state = {
-		board: sqrs,
+		board: ['wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'start', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'empty', 'wall', 'wall', 'wall', 'empty', 'wall', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'wall', 'empty', 'empty', 'empty', 'empty', 'end', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall', 'wall'] as gridSquareState[],
 		mousedown: false,
 		squareTypeSelection: 'start' as gridSquareState,
-		isPathfinding: false,
+		isWorking: false,
 	}
 	private grid = React.createRef<HTMLDivElement>();
 
@@ -69,7 +79,7 @@ export default class PathfindingVis extends Component {
 	}
 
 	handleMouseOver = (index: number): void => {
-		if (!this.state.mousedown || this.state.squareTypeSelection.match(/start|end/) || this.state.isPathfinding) return;
+		if (!this.state.mousedown || this.state.squareTypeSelection.match(/start|end/) || this.state.isWorking) return;
 
 		this.updateBoard(index, this.state.squareTypeSelection);
 	};
@@ -91,7 +101,7 @@ export default class PathfindingVis extends Component {
 	}
 
 	handleClick = (index: number): void => {
-		if (this.state.isPathfinding) return;
+		if (this.state.isWorking) return;
 		this.setState({
 			board: this.state.board.map((square, i) => {
 				let newSquare = square;
@@ -124,10 +134,17 @@ export default class PathfindingVis extends Component {
 		this.updateBatch(totalPath, 'path');
 	}
 
+	clearWalls = (): void => {
+		this.setState({
+			board: this.state.board.map(() => (
+				'empty'
+			)),
+		});
+	}
 
 	startPathfind = (type: 0 | 1): void => {
-		if (this.state.isPathfinding) return;
-		this.setState({ isPathfinding: true });
+		if (this.state.isWorking) return;
+		this.setState({ isWorking: true });
 		this.setState({
 			board: this.state.board.map((square) => (
 				square === 'visited' || square === 'path' ? 'empty' : square
@@ -137,7 +154,7 @@ export default class PathfindingVis extends Component {
 		const start = board.indexOf('start');
 		const end = board.indexOf('end');
 		if (end === -1 || start === -1) {
-			this.setState({ isPathfinding: false });
+			this.setState({ isWorking: false });
 			window.alert('please choose a start and end tile');
 			return;
 		}
@@ -158,7 +175,7 @@ export default class PathfindingVis extends Component {
 				setTimeout(() => {
 					window.alert('no possible path');
 				}, 500);
-				this.setState({ isPathfinding: false });
+				this.setState({ isWorking: false });
 				return;
 			}
 
@@ -168,7 +185,7 @@ export default class PathfindingVis extends Component {
 			});
 
 			if (current === end) {
-				this.setState({ isPathfinding: false });
+				this.setState({ isWorking: false });
 				window.clearInterval(intervalKey);
 				this.reconstructPath(cameFrom, current);
 				return;
@@ -199,6 +216,62 @@ export default class PathfindingVis extends Component {
 
 	}
 
+	mazeRecursiveBacktracker = (): void => {
+		if (this.state.isWorking) return;
+		this.setState({ isWorking: true });
+		// Choose the initial cell, mark it as visited and push it to the stack
+		const stack: number[] = [];
+		const visited: number[] = [];
+
+		const maze: number[] = [];
+		for (let i = 0; i < rows * cols; i++) {
+			const { x, y } = listToTwoD(i);
+			if (!(y % 2 === 0 || x % 2 === 0)) maze.push(i);
+		}
+		this.setState({ board: this.state.board.map(() => 'wall') });
+		const initial = maze[Math.floor(Math.random() * maze.length)];
+
+		stack.push(initial);
+		visited.push(initial);
+
+		// While the stack is not empty
+		const intervalKey = window.setInterval(() => {
+			if (stack.length === 0) {
+				this.setState({ isWorking: false });
+				window.clearInterval(intervalKey);
+				window.alert('done');
+				return;
+			}
+			// Pop a cell from the stack and make it a current cell
+			const current = stack.pop();
+			if (current === undefined) return;
+			this.updateBoard(current, 'empty');
+
+			// If the current cell has any neighbours which have not been visited
+			let mazeNeighbors = getMazeNeighbors(current);
+			mazeNeighbors = mazeNeighbors.filter(mazeNeighbor => !visited.includes(mazeNeighbor));
+
+			if (mazeNeighbors.length === 0) return;
+
+			// Push the current cell to the stack
+			stack.push(current);
+
+			// Choose one of the unvisited neighbours
+			const chosen = mazeNeighbors[Math.floor(Math.random() * mazeNeighbors.length)];
+
+			// Remove the wall between the current cell and the chosen cell
+			const currentWalls = getNeighbors(current);
+			const chosenWalls = getNeighbors(chosen);
+			chosenWalls.forEach(wall => {
+				if (currentWalls.includes(wall)) this.updateBoard(wall, 'empty');
+			});
+
+			// Mark the chosen cell as visited and push it to the stack
+			stack.push(chosen);
+			visited.push(chosen);
+		}, 50);
+	}
+
 	render(): JSX.Element {
 		return (
 			<>
@@ -214,6 +287,8 @@ export default class PathfindingVis extends Component {
 				</form>
 				<button onClick={() => this.startPathfind((1))}>Run A*</button>
 				<button onClick={() => this.startPathfind((0))}>Run Dijkstras</button>
+				<button onClick={() => this.clearWalls()}>Clear Walls</button>
+				<button onClick={() => this.mazeRecursiveBacktracker()}>Generate Maze</button>
 				<div className='grid' ref={this.grid}>
 					{this.state.board.map((square, index) => (
 						<Square type={square} handleMouseOver={this.handleMouseOver} handleClick={this.handleClick} index={index} key={index} />
