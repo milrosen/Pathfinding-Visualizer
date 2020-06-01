@@ -89,7 +89,12 @@ form {
 
 .container input:checked~.checkmark:after {
 	display: block;
-	width: 20px;
+	position: relative;
+	top: 20%;
+	right: -20%;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
 }
 
 .container input:checked~.cWall:after {
@@ -102,6 +107,7 @@ form {
 
 .container input:checked~.cErase:after {
 	background-color: whitesmoke;
+	box-shadow: 0 0 0 1px black;
 }
 
 .container input:checked~.cEnd:after {

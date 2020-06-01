@@ -299,7 +299,7 @@ export default class PathfindingVis extends Component {
 					</form>
 					<button className='btn' onClick={() => this.startPathfind((1))}>Run A*</button>
 					<button className='btn' onClick={() => this.startPathfind((0))}>Run Dijkstras</button>
-					<button className='btn' onClick={() => this.clearWalls()}>Clear Walls</button>
+					<button className='btn' onClick={() => this.clearWalls()}>Clear Grid</button>
 					<button className='btn' onClick={() => this.mazeRecursiveBacktracker()}>Generate Maze</button>
 				</div>
 				<div className='grid' ref={this.grid}>
