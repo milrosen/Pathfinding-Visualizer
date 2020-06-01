@@ -269,26 +269,39 @@ export default class PathfindingVis extends Component {
 			// Mark the chosen cell as visited and push it to the stack
 			stack.push(chosen);
 			visited.push(chosen);
-		}, 50);
+		}, 100);
 	}
 
 	render(): JSX.Element {
 		return (
 			<>
-				<form>
-					<input type='radio' id='wall' name='square-type' value='wall' checked={this.state.squareTypeSelection === 'wall'} onChange={(e) => this.handleOptionChange(e.target)} />
-					<label htmlFor='wall'>Wall</label>
-					<input type='radio' id='empty' name='square-type' value='empty' checked={this.state.squareTypeSelection === 'empty'} onChange={(e) => this.handleOptionChange(e.target)} />
-					<label htmlFor='wall'>Empty</label>
-					<input type='radio' id='start' name='square-type' value='start' checked={this.state.squareTypeSelection === 'start'} onChange={(e) => this.handleOptionChange(e.target)} />
-					<label htmlFor='wall'>Start</label>
-					<input type='radio' id='end' name='square-type' value='end' checked={this.state.squareTypeSelection === 'end'} onChange={(e) => this.handleOptionChange(e.target)} />
-					<label htmlFor='wall'>End</label>
-				</form>
-				<button onClick={() => this.startPathfind((1))}>Run A*</button>
-				<button onClick={() => this.startPathfind((0))}>Run Dijkstras</button>
-				<button onClick={() => this.clearWalls()}>Clear Walls</button>
-				<button onClick={() => this.mazeRecursiveBacktracker()}>Generate Maze</button>
+				<div className='navbar'>
+					<form>
+						<label className="container">Wall
+							<input type='radio' value='wall' checked={this.state.squareTypeSelection === 'wall'} onChange={(e) => this.handleOptionChange(e.target)} />
+							<span className="checkmark cWall"></span>
+						</label>
+
+						<label className="container">Erase
+							<input type='radio' value='empty' checked={this.state.squareTypeSelection === 'empty'} onChange={(e) => this.handleOptionChange(e.target)} />
+							<span className="checkmark cErase"></span>
+						</label>
+
+						<label className="container">Start
+							<input type='radio' value='start' checked={this.state.squareTypeSelection === 'start'} onChange={(e) => this.handleOptionChange(e.target)} />
+							<span className="checkmark cStart"></span>
+						</label>
+
+						<label className="container">End
+							<input type='radio'value='end' checked={this.state.squareTypeSelection === 'end'} onChange={(e) => this.handleOptionChange(e.target)} />
+							<span className="checkmark cEnd"></span>
+						</label>
+					</form>
+					<button className='btn' onClick={() => this.startPathfind((1))}>Run A*</button>
+					<button className='btn' onClick={() => this.startPathfind((0))}>Run Dijkstras</button>
+					<button className='btn' onClick={() => this.clearWalls()}>Clear Walls</button>
+					<button className='btn' onClick={() => this.mazeRecursiveBacktracker()}>Generate Maze</button>
+				</div>
 				<div className='grid' ref={this.grid}>
 					{this.state.board.map((square, index) => (
 						<Square type={square} handleMouseOver={this.handleMouseOver} handleClick={this.handleClick} index={index} key={index} />
