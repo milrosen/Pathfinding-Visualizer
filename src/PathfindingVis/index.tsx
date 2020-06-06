@@ -259,19 +259,22 @@ export default class PathfindingVis extends Component {
 			if (stack.length === 0) {
 				this.setState({ isWorking: false });
 				window.clearInterval(intervalKey);
-				window.alert('done');
 				return;
 			}
 			// Pop a cell from the stack and make it a current cell
 			const current = stack.pop();
 			if (current === undefined) return;
-			this.updateBoard(current, 'empty');
 
 			// If the current cell has any neighbours which have not been visited
 			let mazeNeighbors = getMazeNeighbors(current);
 			mazeNeighbors = mazeNeighbors.filter(mazeNeighbor => !visited.includes(mazeNeighbor));
 
-			if (mazeNeighbors.length === 0) return;
+			if (mazeNeighbors.length === 0) {
+				this.updateBatch(getNeighbors(current).filter((square) => this.state.board[square] === 'visited'), 'empty');
+				this.updateBoard(current, 'empty');
+				return;
+			}
+			this.updateBoard(current, 'visited');
 
 			// Push the current cell to the stack
 			stack.push(current);
@@ -283,7 +286,7 @@ export default class PathfindingVis extends Component {
 			const currentWalls = getNeighbors(current);
 			const chosenWalls = getNeighbors(chosen);
 			chosenWalls.forEach(wall => {
-				if (currentWalls.includes(wall)) this.updateBoard(wall, 'empty');
+				if (currentWalls.includes(wall)) this.updateBoard(wall, 'visited');
 			});
 
 			// Mark the chosen cell as visited and push it to the stack
