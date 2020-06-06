@@ -12,7 +12,8 @@ main {
 	margin: 0;
 	padding: 0;
 	position: fixed;
-	display: flex;
+	z-index: 100;
+	display: grid;
 	width: 100%;
 	height: 5em;
 	background-color: #333533;
@@ -26,7 +27,7 @@ main {
 	outline: none;
 	border: none;
 	color: white;
-	padding: 1em 2em;
+	width: 100%;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
@@ -44,7 +45,7 @@ main {
 }
 
 form {
-	width: 30%;
+	width: 100%;
 	display: flex;
 	justify-content: space-evenly;
 }
@@ -121,11 +122,11 @@ form {
 	grid-template-columns: repeat(35, 1fr);
 	margin: auto;
 	margin-top: 8em;
+	touch-action: none;
+	background-color: whitesmoke;
 }
 
 .square {
-	display: block;
-	background-color: whitesmoke;
 	width: 100%;
 	height: 0;
 	padding-bottom: 100%;
@@ -165,4 +166,29 @@ form {
 .path {
 	background-color: #7209b7;
 	clip-path: circle(75%);
+}
+
+@media only screen and (max-width: 600px) {
+	.grid {
+		grid-template-columns: repeat(17, 1fr);
+	}
+	.btn {
+		grid-row: 2;
+	}
+	.btn:first-of-type {
+		margin: 0;
+	}
+	form {
+		grid-column: 1 / 5;
+	}
+	.default {
+		width: calc(100% + 1px);
+		padding-bottom: calc(100% + 1px);
+	}
+}
+
+@media only screen and (min-width: 600px) {
+	.navbar > * {
+		grid-row: 1;
+	}
 }

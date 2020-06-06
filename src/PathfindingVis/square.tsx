@@ -11,7 +11,7 @@ export default function Square({ type, handleMouseOver, index, handleClick }: { 
 
 	return (
 		<div className='square' ref={ref}>
-			<div className ={`${type} default`}></div>
+			<div className={`${type} default`} id={`${index}`}></div>
 		</div>
 	);
 }

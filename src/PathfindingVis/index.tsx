@@ -3,8 +3,8 @@ import './index.css';
 import Square from './square';
 import { gridSquareState } from './namespace';
 
-const rows = 15;
-const cols = 35;
+let rows = 15;
+let cols = 35;
 
 const sqrs: gridSquareState[] = [];
 for (let i = 0; i < cols * rows; i++) {
@@ -76,6 +76,25 @@ export default class PathfindingVis extends Component {
 	componentDidMount(): void {
 		window.addEventListener('mousedown', () => this.setState({ mousedown: true }));
 		window.addEventListener('mouseup', () => this.setState({ mousedown: false }));
+		let prevIndex = -1;
+		window.addEventListener('touchmove', (event) => {
+			if (this.state.squareTypeSelection.match(/start|end/)) return;
+			const myLocation = event.changedTouches[0];
+			const realTarget = document.elementFromPoint(myLocation.clientX, myLocation.clientY);
+			const targetId = realTarget?.id || realTarget?.children[0].id;
+			const index = parseFloat(targetId || '-1');
+			if (index === prevIndex) return;
+			this.handleClick(index);
+			prevIndex = index;
+		});
+		if (window.innerWidth < 600) {
+			[cols, rows] = [17, 31];
+			const initAllEmpty: gridSquareState[] = [];
+			for (let i = 0; i < rows * cols; i++) {
+				initAllEmpty[i] = 'empty';
+			}
+			this.setState({ board: initAllEmpty });
+		}
 	}
 
 	handleMouseOver = (index: number): void => {
@@ -305,7 +324,7 @@ export default class PathfindingVis extends Component {
 				</div>
 				<div className='grid' ref={this.grid}>
 					{this.state.board.map((square, index) => (
-						<Square type={square} handleMouseOver={this.handleMouseOver} handleClick={this.handleClick} index={index} key={index} />
+						<Square type={square} handleMouseOver={this.handleMouseOver} handleClick={this.handleClick} index={index} key={index}/>
 					))}
 				</div>
 			</>);
